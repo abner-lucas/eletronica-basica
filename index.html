@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal da Disciplina · Eletrônica Básica</title>
+    <meta name="description" content="Portal da disciplina de Eletrônica Básica · Prof. Ábner Lucas · IFPA Campus Breves. Atividades, materiais de apoio e laboratório virtual.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b45309'/%3E%3Cpath d='M4 16h6l2-5 3 10 3-10 3 10 2-5h5' fill='none' stroke='white' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- CABEÇALHO / NAVBAR -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand">
+                <span class="brand-badge" aria-hidden="true">
+                    <svg viewBox="0 0 32 16" width="26" height="13"><path d="M0 8h6l2-5 3 10 3-10 3 10 3-10 2 5h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                </span>
+                <span class="brand-text">Eletrônica<strong>Básica</strong></span>
+            </a>
+
+            <nav class="nav-links" id="nav-menu">
+                <a href="#inicio" class="nav-link active">Início</a>
+                <a href="#avisos" class="nav-link">Avisos</a>
+                <a href="#atividades" class="nav-link">Atividades</a>
+                <a href="#materiais" class="nav-link">Materiais &amp; PDFs</a>
+                <a href="#laboratorio" class="nav-link">Laboratório Virtual</a>
+                <a href="#trilha" class="nav-link">Trilha</a>
+            </nav>
+
+            <div class="nav-actions">
+                <span class="teacher-tag">Prof. Ábner Lucas</span>
+                <button class="mobile-toggle" id="menu-toggle" aria-label="Abrir Menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="badge-pill">
+                    <span class="dot-live"></span> IFPA Campus Breves · Técnico em Informática
+                </div>
+                <h1 class="hero-title">Portal de Atividades e Materiais de <span>Eletrônica Básica</span></h1>
+                <p class="hero-subtitle">
+                    Espaço centralizado para acompanhar os avisos da turma, baixar roteiros e materiais de apoio e praticar os conceitos de circuitos no laboratório virtual.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#atividades" class="btn btn-primary">
+                        ⚡ Ver Atividades
+                    </a>
+                    <a href="#materiais" class="btn btn-secondary">
+                        📥 Baixar Materiais &amp; PDFs
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">V = R·I</span>
+                        <span class="stat-label">Lei de Ohm</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Calculadoras Interativas</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Etapas na Trilha</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CIRCUITO INTERATIVO: clique no interruptor para acender o LED -->
+            <div class="hero-card-preview">
+                <div class="circuit-window">
+                    <div class="window-header">
+                        <div class="window-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="window-title">circuito-led.sim</span>
+                    </div>
+                    <div class="window-body circuit-body" id="hero-circuit" data-on="true">
+                        <svg class="circuit-svg" viewBox="0 0 360 220" role="img" aria-labelledby="circ-title">
+                            <title id="circ-title">Circuito simples: bateria de 9 V, resistor de 330 Ω e LED em série, com interruptor</title>
+                            <!-- fios -->
+                            <path class="wire" d="M60 60 H150 M210 60 H300 V110 M300 160 V180 H60 V60"/>
+                            <!-- corrente animada -->
+                            <path class="current" d="M60 60 H150 M210 60 H300 V110 M300 160 V180 H60 V60"/>
+                            <!-- bateria -->
+                            <g class="battery">
+                                <rect x="40" y="95" width="40" height="50" rx="4"/>
+                                <text x="60" y="125">9V</text>
+                                <text class="pole" x="60" y="90">+</text>
+                            </g>
+                            <!-- resistor -->
+                            <g class="resistor">
+                                <rect x="150" y="50" width="60" height="20" rx="8"/>
+                                <rect class="band" x="160" y="50" width="5" height="20" fill="#f97316"/>
+                                <rect class="band" x="170" y="50" width="5" height="20" fill="#f97316"/>
+                                <rect class="band" x="180" y="50" width="5" height="20" fill="#92400e"/>
+                                <rect class="band" x="196" y="50" width="5" height="20" fill="#d4a017"/>
+                                <text x="180" y="38">330 Ω</text>
+                            </g>
+                            <!-- LED -->
+                            <g class="led">
+                                <circle class="led-glow" cx="300" cy="135" r="30"/>
+                                <path class="led-body" d="M286 125 L314 125 L300 147 Z"/>
+                                <path class="led-bar" d="M286 149 H314"/>
+                                <path class="led-arrow" d="M318 128 l10 -8 M322 138 l10 -8"/>
+                            </g>
+                            <!-- interruptor -->
+                            <g class="switch" id="circuit-switch" tabindex="0" role="switch" aria-checked="true" aria-label="Interruptor do circuito">
+                                <rect class="switch-hit" x="140" y="160" width="80" height="40" rx="10"/>
+                                <circle cx="155" cy="180" r="4"/>
+                                <circle cx="205" cy="180" r="4"/>
+                                <path class="switch-lever" d="M155 180 L205 180"/>
+                            </g>
+                        </svg>
+                        <div class="circuit-readout">
+                            <span class="readout-item"><b>I</b> = <span id="readout-current">21,21 mA</span></span>
+                            <span class="readout-hint">Clique no interruptor para ligar/desligar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE AVISOS (mural da turma) -->
+    <section id="avisos" class="section notices-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Mural da Turma</span>
+                <h2 class="section-title">Avisos &amp; Comunicados</h2>
+                <p class="section-desc">
+                    Fique atento às datas de entrega, aulas práticas no laboratório e orientações gerais da disciplina.
+                </p>
+            </div>
+
+            <div class="notices-list">
+                <!--
+                    COMO ADICIONAR UM AVISO:
+                    copie o bloco <article class="notice"> abaixo, cole no topo da lista
+                    e altere a data, o tipo (notice-info, notice-warn ou notice-ok) e o texto.
+                -->
+                <article class="notice notice-info">
+                    <div class="notice-date">
+                        <span class="notice-day">15</span>
+                        <span class="notice-month">nov</span>
+                    </div>
+                    <div class="notice-content">
+                        <span class="notice-kind">Boas-vindas</span>
+                        <h3>Portal da disciplina no ar!</h3>
+                        <p>A partir de agora, as atividades, roteiros de prática e materiais de apoio de Eletrônica Básica serão divulgados aqui. Salve este endereço nos favoritos.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE ATIVIDADES -->
+    <section id="atividades" class="section projects-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Aplicações Práticas</span>
+                <h2 class="section-title">Atividades da Disciplina</h2>
+                <p class="section-desc">
+                    Roteiros de práticas, listas de exercícios e avaliações. Cada atividade traz orientações, materiais necessários e critérios de entrega.
+                </p>
+            </div>
+
+            <!-- FILTRO DE CATEGORIAS -->
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="pratica">Práticas de Laboratório</button>
+                <button class="filter-btn" data-filter="exercicio">Listas de Exercícios</button>
+                <button class="filter-btn" data-filter="avaliacao">Avaliações</button>
+            </div>
+
+            <!-- GRADE DE ATIVIDADES -->
+            <div class="projects-grid">
+
+                <!--
+                    COMO ADICIONAR UMA ATIVIDADE:
+                    1. Crie a pasta projetos/NN-nome-da-atividade/ (com index.html) ou coloque o PDF em docs/.
+                    2. Copie um bloco <article class="project-card"> e ajuste:
+                       - data-category: pratica | exercicio | avaliacao
+                       - título, resumo, tags e links dos botões.
+                    3. Apague o cartão "Em breve" correspondente, se houver.
+                -->
+
+                <!-- ATIVIDADE 1: LABORATÓRIO VIRTUAL (já disponível) -->
+                <article class="project-card" data-category="pratica">
+                    <div class="project-badge-top">
+                        <span class="badge badge-accent">Prática Interativa</span>
+                        <span class="badge badge-subtle">Individual</span>
+                    </div>
+                    <div class="project-media project-media-lab">
+                        <div class="eval-cover">
+                            <span class="eval-cover-kicker">Laboratório virtual</span>
+                            <strong>Lei de Ohm &amp; Código de Cores</strong>
+                            <span class="eval-cover-flow">V = R × I · 4 faixas</span>
+                        </div>
+                        <div class="media-overlay">
+                            <span class="overlay-tag">Disponível no portal</span>
+                        </div>
+                    </div>
+                    <div class="project-body">
+                        <h3 class="project-title">Laboratório Virtual · Calculadoras</h3>
+                        <p class="project-summary">
+                            Use as calculadoras do portal para conferir seus cálculos de tensão, corrente e resistência e para identificar o valor de resistores pelo <span class="highlight">código de cores</span>.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Lei de Ohm</span>
+                            <span class="tech-tag">Potência</span>
+                            <span class="tech-tag">Resistores</span>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <a href="#laboratorio" class="btn btn-card-primary">
+                            Abrir Laboratório <span>→</span>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- ATIVIDADE 2: EM BREVE -->
+                <article class="project-card project-card-soon" data-category="exercicio">
+                    <div class="project-badge-top">
+                        <span class="badge badge-brand">Lista de Exercícios</span>
+                        <span class="badge badge-subtle">Em breve</span>
+                    </div>
+                    <div class="project-media project-media-soon">
+                        <div class="eval-cover">
+                            <span class="eval-cover-kicker">Aguardando publicação</span>
+                            <strong>Lista 01 · Grandezas Elétricas</strong>
+                            <span class="eval-cover-flow">tensão · corrente · resistência</span>
+                        </div>
+                    </div>
+                    <div class="project-body">
+                        <h3 class="project-title">Lista 01 · Grandezas Elétricas</h3>
+                        <p class="project-summary">
+                            Exercícios sobre unidades de medida, prefixos (m, k, M), conversões e aplicação direta da Lei de Ohm. O link será liberado assim que a lista for publicada.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Unidades SI</span>
+                            <span class="tech-tag">Prefixos</span>
+                            <span class="tech-tag">Lei de Ohm</span>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <span class="btn btn-card-disabled" aria-disabled="true">🔒 Disponível em breve</span>
+                    </div>
+                </article>
+
+                <!-- ATIVIDADE 3: EM BREVE -->
+                <article class="project-card project-card-soon" data-category="avaliacao">
+                    <div class="project-badge-top">
+                        <span class="badge badge-eval">Avaliação</span>
+                        <span class="badge badge-subtle">Em breve</span>
+                    </div>
+                    <div class="project-media project-media-eval">
+                        <div class="eval-cover">
+                            <span class="eval-cover-kicker">Aguardando publicação</span>
+                            <strong>1ª Avaliação Prática</strong>
+                            <span class="eval-cover-flow">protoboard · multímetro</span>
+                        </div>
+                    </div>
+                    <div class="project-body">
+                        <h3 class="project-title">1ª Avaliação · Montagem e Medição</h3>
+                        <p class="project-summary">
+                            Montagem de circuitos em protoboard e medição de tensão, corrente e resistência com o multímetro. Roteiro e critérios serão divulgados aqui.
+                        </p>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Protoboard</span>
+                            <span class="tech-tag">Multímetro</span>
+                            <span class="tech-tag">Série &amp; Paralelo</span>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <span class="btn btn-card-disabled" aria-disabled="true">🔒 Disponível em breve</span>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE MATERIAIS & DOWNLOADS -->
+    <section id="materiais" class="section materials-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Documentação Acadêmica</span>
+                <h2 class="section-title">Materiais de Apoio &amp; PDFs</h2>
+                <p class="section-desc">
+                    Slides das aulas, apostilas, roteiros de prática e tabelas de referência para estudo.
+                </p>
+            </div>
+
+            <div class="materials-grid">
+
+                <!--
+                    COMO ADICIONAR UM MATERIAL:
+                    1. Coloque o arquivo na pasta docs/ (ex.: docs/Aula01_Grandezas_Eletricas.pdf).
+                    2. Copie um bloco <div class="material-card"> e troque o título, a descrição e o href.
+                -->
+
+                <div class="material-card">
+                    <div class="material-icon">📘</div>
+                    <div class="material-info">
+                        <h4>Plano da Disciplina · Eletrônica Básica</h4>
+                        <p>Ementa, objetivos, conteúdos programáticos, cronograma e formas de avaliação da disciplina.</p>
+                        <div class="material-meta">
+                            <span>Formato: PDF</span> · <span>Em breve</span>
+                        </div>
+                    </div>
+                    <div class="material-action">
+                        <span class="btn btn-download-file is-disabled" aria-disabled="true">🔒 Em breve</span>
+                    </div>
+                </div>
+
+                <div class="material-card">
+                    <div class="material-icon">🎨</div>
+                    <div class="material-info">
+                        <h4>Tabela · Código de Cores de Resistores</h4>
+                        <p>Referência rápida das cores das faixas (dígitos, multiplicador e tolerância). Também disponível de forma interativa no Laboratório Virtual.</p>
+                        <div class="material-meta">
+                            <span>Formato: interativo</span> · <span>Consulta</span>
+                        </div>
+                    </div>
+                    <div class="material-action">
+                        <a href="#laboratorio" class="btn btn-download-file">🔎 Abrir</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO LABORATÓRIO VIRTUAL -->
+    <section id="laboratorio" class="section lab-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Ferramentas</span>
+                <h2 class="section-title">Laboratório Virtual</h2>
+                <p class="section-desc">
+                    Confira seus cálculos e identifique resistores antes de ir para a bancada.
+                </p>
+            </div>
+
+            <div class="lab-grid">
+
+                <!-- CALCULADORA LEI DE OHM -->
+                <div class="lab-card">
+                    <div class="lab-card-head">
+                        <span class="lab-icon">Ω</span>
+                        <div>
+                            <h3>Calculadora · Lei de Ohm</h3>
+                            <p>Preencha <strong>dois</strong> valores e calcule o terceiro.</p>
+                        </div>
+                    </div>
+
+                    <form class="ohm-form" id="ohm-form" novalidate>
+                        <label class="field">
+                            <span>Tensão (V)</span>
+                            <div class="input-unit">
+                                <input type="text" inputmode="decimal" id="ohm-v" placeholder="ex.: 9">
+                                <em>V</em>
+                            </div>
+                        </label>
+                        <label class="field">
+                            <span>Corrente (I)</span>
+                            <div class="input-unit">
+                                <input type="text" inputmode="decimal" id="ohm-i" placeholder="ex.: 0,02">
+                                <em>A</em>
+                            </div>
+                        </label>
+                        <label class="field">
+                            <span>Resistência (R)</span>
+                            <div class="input-unit">
+                                <input type="text" inputmode="decimal" id="ohm-r" placeholder="ex.: 330">
+                                <em>Ω</em>
+                            </div>
+                        </label>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Calcular</button>
+                            <button type="reset" class="btn btn-secondary">Limpar</button>
+                        </div>
+                    </form>
+                    <div class="lab-result" id="ohm-result" aria-live="polite">
+                        <span class="result-muted">O resultado aparece aqui.</span>
+                    </div>
+                    <div class="formula-strip">
+                        <span>V = R × I</span><span>I = V ÷ R</span><span>R = V ÷ I</span><span>P = V × I</span>
+                    </div>
+                </div>
+
+                <!-- CÓDIGO DE CORES -->
+                <div class="lab-card">
+                    <div class="lab-card-head">
+                        <span class="lab-icon">▥</span>
+                        <div>
+                            <h3>Código de Cores · 4 faixas</h3>
+                            <p>Escolha as cores das faixas para descobrir o valor.</p>
+                        </div>
+                    </div>
+
+                    <div class="resistor-preview" aria-hidden="true">
+                        <svg viewBox="0 0 320 70">
+                            <path d="M0 35 H60 M260 35 H320" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+                            <rect x="60" y="12" width="200" height="46" rx="20" fill="#e8d3a8" stroke="#c9b083" stroke-width="2"/>
+                            <rect id="band-1" x="88" y="12" width="16" height="46" fill="#f97316"/>
+                            <rect id="band-2" x="120" y="12" width="16" height="46" fill="#f97316"/>
+                            <rect id="band-3" x="152" y="12" width="16" height="46" fill="#92400e"/>
+                            <rect id="band-4" x="216" y="12" width="16" height="46" fill="#d4a017"/>
+                        </svg>
+                    </div>
+
+                    <div class="band-selects">
+                        <label class="field"><span>1ª faixa</span><select id="sel-1"></select></label>
+                        <label class="field"><span>2ª faixa</span><select id="sel-2"></select></label>
+                        <label class="field"><span>Multiplicador</span><select id="sel-3"></select></label>
+                        <label class="field"><span>Tolerância</span><select id="sel-4"></select></label>
+                    </div>
+
+                    <div class="lab-result" id="color-result" aria-live="polite">
+                        <span class="result-value">330 Ω</span>
+                        <span class="result-muted">± 5%</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO TRILHA DE APRENDIZADO -->
+    <section id="trilha" class="section timeline-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">Conteúdos Curriculares</span>
+                <h2 class="section-title">Trilha da Disciplina</h2>
+                <p class="section-desc">
+                    Visão geral dos conceitos teóricos e práticos explorados ao longo das aulas de Eletrônica Básica.
+                </p>
+            </div>
+
+            <div class="timeline-grid">
+                <div class="timeline-card">
+                    <div class="step-badge">Etapa 1</div>
+                    <h3>Grandezas Elétricas</h3>
+                    <p>Carga, tensão, corrente, resistência e potência. Unidades do SI, prefixos e notação científica.</p>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="step-badge">Etapa 2</div>
+                    <h3>Lei de Ohm &amp; Potência</h3>
+                    <p>Relação entre V, I e R, cálculo de potência dissipada e efeito Joule em componentes.</p>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="step-badge">Etapa 3</div>
+                    <h3>Resistores &amp; Associações</h3>
+                    <p>Código de cores, associações em série, paralelo e mista, divisores de tensão e de corrente.</p>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="step-badge">Etapa 4</div>
+                    <h3>Instrumentos de Medição</h3>
+                    <p>Uso do multímetro (voltímetro, amperímetro e ohmímetro), protoboard e fontes de alimentação.</p>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="step-badge">Etapa 5</div>
+                    <h3>Componentes Eletrônicos</h3>
+                    <p>Capacitores, indutores, diodos, LEDs e transistores: funcionamento, identificação e aplicações.</p>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="step-badge">Etapa 6</div>
+                    <h3>Circuitos Práticos</h3>
+                    <p>Fontes de alimentação, retificação, circuitos com LED e introdução à eletrônica digital.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>⚡ Eletrônica Básica</h3>
+                <p>Portal de atividades, materiais e práticas da disciplina de Eletrônica Básica.</p>
+            </div>
+            <div class="footer-info">
+                <p><strong>Orientação:</strong> Prof. Ábner Lucas</p>
+                <p>IFPA Campus Breves · Técnico em Informática</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Portal de Eletrônica Básica. Desenvolvido para fins didáticos.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
