@@ -448,8 +448,9 @@ ol, ul { list-style: none; }
 }
 .chip-ci:hover { transform: translateY(-6px); box-shadow: 8px 10px 0 var(--tinta); }
 
+.chip-foto { width: 100%; height: auto; border-radius: 12px; margin: 4px 0; }
 .chip-ci.destaque {
-    grid-row: span 2;
+    grid-row: span 3;
     background: var(--tinta); color: var(--papel); border-color: var(--tinta);
 }
 .chip-ci.destaque::before { background: repeating-linear-gradient(90deg, var(--cobre) 0 10px, transparent 10px 26px); }
@@ -512,7 +513,7 @@ ol, ul { list-style: none; }
     transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
 }
 .link-baixar::after { content: '↓'; transition: transform 0.3s var(--ease); }
-.link-baixar[href^="#"]::after { content: '→'; }
+.link-baixar[href^="#"]::after, .link-baixar[href$=".html"]::after { content: '→'; }
 .link-baixar:hover { background: var(--tinta); color: var(--papel); }
 .link-baixar:hover::after { transform: translateY(2px); }
 .link-baixar[href^="#"]:hover::after { transform: translateX(3px); }

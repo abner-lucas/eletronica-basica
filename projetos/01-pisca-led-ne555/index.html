@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pisca-LED com NE555 · Eletrônica Básica</title>
+    <meta name="description" content="Aula prática de Eletrônica Básica (IFPA Campus Breves): do esquema elétrico à placa de circuito em 3D com NE555, no EasyEDA Std Edition.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f3a2c'/%3E%3Cpath d='M3 16h6l2-5 3 10 3-10 3 10 2-5h7' fill='none' stroke='%23e9894a' stroke-width='2.6' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+    <script>
+        (function () {
+            try {
+                var salvo = localStorage.getItem('eb:tema');
+                var escuro = salvo ? salvo === 'escuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.dataset.tema = escuro ? 'escuro' : 'claro';
+            } catch (e) { document.documentElement.dataset.tema = 'claro'; }
+            document.documentElement.classList.add('js');
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css?v=2026.11.16b">
+    <link rel="stylesheet" href="roteiro.css?v=2026.11.16b">
+</head>
+<body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <div class="progresso" aria-hidden="true"><span id="progresso-barra"></span></div>
+
+    <header class="topo" id="topo">
+        <div class="topo-inner">
+            <a href="../../index.html" class="marca" aria-label="Eletrônica Básica, voltar ao portal">
+                <svg class="marca-simbolo" viewBox="0 0 44 20" aria-hidden="true">
+                    <path d="M1 10h9l2.5-6 4 12 4-12 4 12 4-12 2.5 6h12" />
+                    <circle cx="1.5" cy="10" r="1.5" /><circle cx="42.5" cy="10" r="1.5" />
+                </svg>
+                <span class="marca-texto">Eletrônica <em>Básica</em></span>
+            </a>
+            <nav class="menu" id="menu" aria-label="Seções do roteiro">
+                <a href="#desafio">Desafio</a>
+                <a href="#funcionamento">Funcionamento</a>
+                <a href="#esquema">Esquema</a>
+                <a href="#placa">Placa</a>
+                <a href="#passos">Passo a passo</a>
+                <a href="#entrega">Entrega</a>
+                <a href="../../index.html#atividades" class="menu-voltar">← Portal</a>
+            </nav>
+            <div class="topo-acoes">
+                <button class="botao-tema" id="botao-tema" type="button" aria-label="Alternar modo escuro" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="led-tri" d="M6 7h10l-5 8z" /><path d="M6 15.5h10M11 15.5V21M11 2v5" /><path class="led-raios" d="M17 4l3-3M19 8l3-3" /></svg>
+                </button>
+                <button class="botao-menu" id="botao-menu" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main id="conteudo">
+
+        <!-- ============ ABERTURA ============ -->
+        <section class="abertura" id="inicio">
+            <div class="abertura-grade">
+                <div class="abertura-texto">
+                    <p class="abertura-kicker">
+                        <span>AT-02</span><span>Prática de laboratório</span><span>Individual ou em dupla</span><span>3 a 4 aulas</span>
+                    </p>
+                    <h1 class="abertura-titulo roteiro-titulo" data-palavras>Pisca-LED com <em>NE555</em></h1>
+                    <p class="abertura-lede entra" style="--atraso: .45s">
+                        Do esquema elétrico à placa em 3D no <strong>EasyEDA Std Edition</strong>: você vai calcular, desenhar o esquema,
+                        escolher os encapsulamentos, posicionar os componentes, rotear as trilhas e inspecionar a sua placa.
+                    </p>
+                    <div class="abertura-acoes entra" style="--atraso: .6s">
+                        <a href="#passos" class="botao botao-cobre">Começar a atividade <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg></a>
+                        <button type="button" class="botao botao-linha" data-imprimir>Imprimir / salvar PDF</button>
+                    </div>
+                    <dl class="ficha entra" style="--atraso: .7s">
+                        <div><dt>Circuito</dt><dd>NE555 astável</dd></div>
+                        <div><dt>Alimentação</dt><dd>5 V CC</dd></div>
+                        <div><dt>Placa</dt><dd>65 × 45 mm</dd></div>
+                        <div><dt>Ferramenta</dt><dd>EasyEDA Std</dd></div>
+                    </dl>
+                </div>
+                <figure class="placa vitrine entra" style="--atraso: .3s">
+                    <div class="placa-serigrafia" aria-hidden="true"><span>REF-3D · PISCA-LED NE555</span><span>65 × 45 MM</span></div>
+                    <img src="img/pcb-3d.svg?v=2026.11.16b" width="820" height="560" alt="Vista 3D de referência da placa: borne azul, resistores, NE555 no centro, capacitores e LED vermelho.">
+                    <figcaption>Vista 3D de referência, gerada a partir do mesmo layout da seção “A placa”.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- ============ 01 · DESAFIO ============ -->
+        <section id="desafio" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 10h16M32 10h16M16 3h16l-8 12zM16 16h16" /><path class="raio" d="M34 4l5-4M38 9l5-4" /></svg>
+                            <span>01 · o desafio</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>Fazer um LED piscar sem programação</h2>
+                    </div>
+                    <p class="cabecalho-desc">Sem botão e sem microcontrolador: quem faz o LED acender e apagar sozinho é o circuito integrado temporizador NE555.</p>
+                </header>
+
+                <ol class="fluxo" data-cascata>
+                    <li><span class="fluxo-no" aria-hidden="true"></span><span class="fluxo-num">01</span><h3>Planejar</h3><p>Entender para que serve o circuito, quais são os componentes e como eles se ligam.</p></li>
+                    <li><span class="fluxo-no" aria-hidden="true"></span><span class="fluxo-num">02</span><h3>Projetar</h3><p>Representar as ligações num esquema e transformá-las numa placa com trilhas de cobre.</p></li>
+                    <li><span class="fluxo-no" aria-hidden="true"></span><span class="fluxo-num">03</span><h3>Validar e apresentar</h3><p>Conferir polaridades, ligações, encapsulamentos e regras de layout, e mostrar a placa em 3D.</p></li>
+                </ol>
+
+                <aside class="nota nota-alerta">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z" /><path d="M12 10v5M12 18v.5" /></svg>
+                    <p><strong>Atenção.</strong> O projeto é feito no computador, para uma fonte de <strong>5 V CC</strong>. Nunca ligue este circuito na rede elétrica (tomada). A vista 3D mostra a montagem, mas <strong>não comprova</strong> que o circuito funciona.</p>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ============ 02 · FUNCIONAMENTO (palco) ============ -->
+        <section id="funcionamento" class="secao secao-palco" data-cena="palco">
+            <div class="palco">
+                <div class="moldura">
+                    <header class="cabecalho">
+                        <div>
+                            <p class="etiqueta">
+                                <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 14h8V4h12v10h8V4h12v10h8" /><path class="raio" d="M40 2h6" /></svg>
+                                <span>02 · funcionamento</span>
+                            </p>
+                            <h2 class="titulo" data-palavras>Como o NE555 faz o LED piscar</h2>
+                        </div>
+                        <p class="cabecalho-desc">No <strong>modo astável</strong> o NE555 gera sem parar um sinal que alterna entre nível alto e baixo. É essa alternância que acende e apaga o LED.</p>
+                    </header>
+
+                    <div class="funcionamento">
+                        <div class="explicacao">
+                            <ol class="pinos-lista">
+                                <li><b>C1</b> carrega através de <b>R1 + R2</b> e descarrega só através de <b>R2</b>.</li>
+                                <li>Os pinos <b>2 e 6</b> vigiam a tensão de C1: ela sobe até ⅔ de 5 V e desce até ⅓.</li>
+                                <li>O pino <b>7</b> descarrega C1 enquanto a saída está em nível baixo.</li>
+                                <li>O pino <b>3</b> é a saída: em nível alto, a corrente passa por R3 e acende o LED.</li>
+                                <li><b>C2</b> estabiliza a entrada de controle (pino 5) contra ruído.</li>
+                            </ol>
+                            <div class="formulas">
+                                <p><span>aceso</span> t<sub>alto</sub> ≈ 0,693 · (R1 + R2) · C1</p>
+                                <p><span>apagado</span> t<sub>baixo</sub> ≈ 0,693 · R2 · C1</p>
+                                <p><span>frequência</span> f ≈ 1,44 ÷ [(R1 + 2·R2) · C1]</p>
+                            </div>
+                            <p class="dica">Com R1 = 10 kΩ, R2 = 100 kΩ e C1 = 10 µF: f ≈ 0,69 Hz, ou <b>um ciclo a cada 1,46 s</b>. O LED fica aceso ≈ 0,76 s e apagado ≈ 0,69 s. Valores aproximados: a tolerância dos componentes muda os tempos reais.</p>
+                        </div>
+
+                        <!-- OSCILADOR INTERATIVO -->
+                        <article class="instrumento oscilador" id="oscilador">
+                            <h3>Oscilador astável <small>troque os valores e veja o efeito</small></h3>
+                            <div class="osc-controles">
+                                <label class="borne"><span>R1</span><select id="osc-r1"></select></label>
+                                <label class="borne"><span>R2</span><select id="osc-r2"></select></label>
+                                <label class="borne"><span>C1</span><select id="osc-c"></select></label>
+                            </div>
+                            <div class="osc-visor">
+                                <div class="osc-led" aria-hidden="true"><span id="osc-led"></span></div>
+                                <div class="lcd" aria-live="polite">
+                                    <span class="lcd-rotulo">frequência</span>
+                                    <span class="lcd-valor" id="osc-f">0,687 Hz</span>
+                                    <span class="lcd-extra" id="osc-extra">aceso 0,762 s · apagado 0,693 s</span>
+                                </div>
+                            </div>
+                            <svg class="osc-grafico" id="osc-grafico" viewBox="0 0 420 170" role="img" aria-label="Gráfico da tensão em C1 e da saída do pino 3 ao longo de três ciclos">
+                                <text x="0" y="12" class="osc-rot">C1 (pinos 2/6)</text>
+                                <path class="osc-ref" d="M0 34H372M0 72H372" />
+                                <text x="420" y="31" class="osc-rot fim">⅔ Vcc</text><text x="420" y="69" class="osc-rot fim">⅓ Vcc</text>
+                                <path class="osc-c1" id="osc-c1" d="" />
+                                <text x="0" y="104" class="osc-rot">saída (pino 3) → LED</text>
+                                <path class="osc-saida" id="osc-saida" d="" />
+                                <line class="osc-cursor" id="osc-cursor" x1="0" y1="18" x2="0" y2="166" />
+                            </svg>
+                            <p class="dica" id="osc-desafio">Desafio A: troque R2 para 47 kΩ. O LED pisca mais rápido ou mais devagar?</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 03 · ESQUEMA ============ -->
+        <section id="esquema" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><rect x="12" y="2" width="24" height="16" rx="2" /><path d="M16 2v-2M22 2v-2M28 2v-2M34 2v-2M16 18v2M22 18v2M28 18v2M34 18v2" /><path class="raio" d="M21 2a3 3 0 0 0 6 0" /></svg>
+                            <span>03 · esquema elétrico</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>O esquema de referência</h2>
+                    </div>
+                    <p class="cabecalho-desc">Monte no EasyEDA as mesmas ligações. <strong>Observe os números dos pinos</strong>: no símbolo eles ficam agrupados por função, não na ordem física do CI.</p>
+                </header>
+
+                <figure class="folha">
+                    <a href="img/esquema.svg?v=2026.11.16b" target="_blank" rel="noopener" class="folha-ampliar" aria-label="Abrir o esquema em tamanho grande (nova aba)">
+                        <img src="img/esquema.svg?v=2026.11.16b" width="720" height="480" alt="Esquema elétrico do pisca-LED com NE555. Descrição completa na tabela de ligações abaixo." loading="lazy">
+                    </a>
+                    <figcaption>Desenhado no estilo do editor de esquemas do EasyEDA. Toque na imagem para ampliar. O desenho não substitui a conferência no <i>Design Manager</i>.</figcaption>
+                </figure>
+
+                <div class="esquema-grade">
+                    <div class="bom-moldura">
+                        <table class="bom tabela-pinos">
+                            <caption class="sr-only">Ligações de cada pino do NE555</caption>
+                            <thead><tr><th scope="col">Pino</th><th scope="col">Nome</th><th scope="col">Liga em</th></tr></thead>
+                            <tbody>
+                                <tr><td class="bom-ref">1</td><td>GND</td><td>Terra (negativo da fonte)</td></tr>
+                                <tr><td class="bom-ref">2</td><td>TRIG</td><td>Pino 6 e positivo de C1</td></tr>
+                                <tr><td class="bom-ref">3</td><td>OUT</td><td>R3 → ânodo do LED; cátodo no GND</td></tr>
+                                <tr><td class="bom-ref">4</td><td>RESET</td><td>+5 V (nunca deixe solto)</td></tr>
+                                <tr><td class="bom-ref">5</td><td>CTRL</td><td>C2 (10 nF) até o GND</td></tr>
+                                <tr><td class="bom-ref">6</td><td>THRESH</td><td>Pino 2 e ponta de baixo de R2</td></tr>
+                                <tr><td class="bom-ref">7</td><td>DISCH</td><td>Junção de R1 com R2</td></tr>
+                                <tr><td class="bom-ref">8</td><td>VCC</td><td>+5 V</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <aside class="nota nota-ok">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M7.5 12.5l3 3 6-6.5" /></svg>
+                        <div>
+                            <p><strong>A topologia em uma frase:</strong> R1 liga +5 V ao pino 7; R2 liga o pino 7 ao nó dos pinos 2 e 6; C1 liga esse nó ao GND.</p>
+                            <p>C2 liga o <strong>pino 5</strong> ao GND, e não ao nó 2/6.</p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 04 · COMPONENTES (BOM) ============ -->
+        <section id="componentes" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 10h20M28 10h20M20 2v16M28 2v16" /><path class="raio" d="M14 4h-4M12 2v4" /></svg>
+                            <span>04 · lista de materiais (BOM)</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>Componentes e encapsulamentos</h2>
+                    </div>
+                    <p class="cabecalho-desc">Use encapsulamentos <strong>THT</strong> (terminais que atravessam a placa): são mais fáceis de entender e de soldar numa primeira experiência.</p>
+                </header>
+
+                <div class="bom-moldura">
+                    <table class="bom tabela-componentes">
+                        <caption class="sr-only">Lista de componentes</caption>
+                        <thead><tr><th scope="col">Ref.</th><th scope="col">Componente</th><th scope="col">Valor e encapsulamento</th><th scope="col">Qtd.</th></tr></thead>
+                        <tbody>
+                            <tr><td class="bom-ref">U1</td><td><strong>Temporizador NE555</strong></td><td>DIP-8</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">R1</td><td><strong>Resistor</strong></td><td>10 kΩ · ¼ W · axial (AXIAL-0.4)</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">R2</td><td><strong>Resistor</strong></td><td>100 kΩ · ¼ W · axial (AXIAL-0.4)</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">R3</td><td><strong>Resistor</strong></td><td>330 Ω · ¼ W · axial (AXIAL-0.4)</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">C1</td><td><strong>Capacitor eletrolítico</strong></td><td>10 µF · ≥ 10 V · radial, polarizado</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">C2</td><td><strong>Capacitor cerâmico</strong></td><td>10 nF (0,01 µF, código 103) · THT</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">LED1</td><td><strong>LED vermelho</strong></td><td>5 mm · THT</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">J1</td><td><strong>Borne de alimentação</strong></td><td>2 vias · passo 5,08 mm (ex.: KF301-2P)</td><td class="bom-fmt">1</td></tr>
+                            <tr><td class="bom-ref">PCB</td><td><strong>Placa de circuito impresso</strong></td><td>65 × 45 mm, duas camadas</td><td class="bom-fmt">1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <aside class="nota nota-alerta">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z" /><path d="M12 10v5M12 18v.5" /></svg>
+                    <p><strong>Correção em relação à ilustração antiga:</strong> no astável convencional, C2 é de <strong>10 nF</strong> entre o pino 5 e o GND. Se a placa for fabricada, acrescente também <strong>C3 = 100 nF</strong> entre os pinos 8 e 1, bem perto do CI (veja o Desafio C). A alimentação é só <strong>5 V</strong>, porque R3 foi escolhido para essa tensão: com a saída em nível alto (≈ 3,3 V), o LED recebe cerca de 4 mA.</p>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ============ 05 · PLACA ============ -->
+        <section id="placa" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><rect x="4" y="2" width="40" height="16" rx="3" /><path class="raio" d="M10 10h10l4-4h10" /></svg>
+                            <span>05 · PCB e 3D</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>A placa que queremos construir</h2>
+                    </div>
+                    <p class="cabecalho-desc">Um layout possível, com as cores das camadas do editor de PCB do EasyEDA Std. O seu pode ser diferente, desde que todas as ligações estejam certas e o DRC não aponte erros.</p>
+                </header>
+
+                <div class="placa-grade">
+                    <figure class="folha folha-escura">
+                        <a href="img/pcb-topo.svg?v=2026.11.16b" target="_blank" rel="noopener" class="folha-ampliar" aria-label="Abrir o layout da PCB em tamanho grande (nova aba)">
+                            <img src="img/pcb-topo.svg?v=2026.11.16b" width="710" height="556" alt="Layout da PCB, vista superior: borne J1 à esquerda, R1 e R2 acima do NE555, C1 abaixo à esquerda, C2 à direita do CI, R3 e LED1 à direita. Sinais em vermelho na camada superior, GND em azul na inferior." loading="lazy">
+                        </a>
+                        <figcaption><b>Vista superior.</b> Vermelho: camada de cima (sinais e +5 V). Azul: camada de baixo (GND e a ligação 8–4 por baixo do CI). Amarelo: serigrafia. Magenta: contorno da placa.</figcaption>
+                    </figure>
+                    <figure class="folha">
+                        <a href="img/pcb-3d.svg?v=2026.11.16b" target="_blank" rel="noopener" class="folha-ampliar" aria-label="Abrir a vista 3D em tamanho grande (nova aba)">
+                            <img src="img/pcb-3d.svg?v=2026.11.16b" width="820" height="560" alt="Vista 3D da mesma placa: borne azul, resistores com faixas de cor, NE555 no centro, eletrolítico azul-escuro com faixa do negativo, cerâmico amarelo e LED vermelho." loading="lazy">
+                        </a>
+                        <figcaption><b>Vista 3D.</b> Ilustração didática do mesmo layout; não é exportada pelo EasyEDA. No editor, a aparência depende dos modelos 3D ligados a cada encapsulamento.</figcaption>
+                    </figure>
+                </div>
+
+                <ul class="conferido" data-cascata>
+                    <li><b>7 redes</b> ligadas por completo: +5V, GND, DIS, THR, CTRL, OUT e LED_A.</li>
+                    <li><b>Nenhuma trilha</b> passa sobre o pad de outra rede.</li>
+                    <li>Trilhas de <b>0,5 mm</b> para sinais e <b>0,8 mm</b> para +5 V e GND.</li>
+                    <li>O LED fica na borda direita e o borne na esquerda, <b>fáceis de acessar</b>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ============ 06 · PASSO A PASSO ============ -->
+        <section id="passos" class="secao" data-cena>
+            <div class="moldura trilha-grade">
+                <header class="cabecalho cabecalho-fixo">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 10h18M30 10h18M18 2v16M24 6v8" /><path class="raio" d="M34 4h4M36 2v4" /></svg>
+                            <span>06 · passo a passo</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>No EasyEDA Std Edition</h2>
+                    </div>
+                    <p class="cabecalho-desc">Abra <a href="https://easyeda.com/editor" target="_blank" rel="noopener noreferrer">easyeda.com/editor ↗</a>, escolha a <strong>Std Edition</strong> e entre com sua conta para conseguir salvar. Tire um print de cada etapa para a entrega.</p>
+                    <p class="cabecalho-desc aviso-versao">Os nomes de menus e atalhos podem mudar um pouco entre versões do editor.</p>
+                </header>
+
+                <ol class="trilha passos" id="trilha-lista">
+                    <li class="trilha-fio" aria-hidden="true"><span id="trilha-corrente"></span></li>
+
+                    <li class="etapa">
+                        <span class="no" aria-hidden="true"></span>
+                        <span class="etapa-num">Passo 1 · planejamento · 15 min</span>
+                        <h3>Interprete o circuito</h3>
+                        <ul>
+                            <li>Diga para que servem o NE555 e o LED.</li>
+                            <li>Identifique alimentação, terra e saída.</li>
+                            <li>Observe pinos e polaridades (C1 e LED).</li>
+                            <li>Estime a frequência usando o oscilador acima.</li>
+                        </ul>
+                    </li>
+
+                    <li class="etapa">
+                        <span class="no" aria-hidden="true"></span>
+                        <span class="etapa-num">Passo 2 · esquema · 25 min</span>
+                        <h3>Desenhe o esquema</h3>
+                        <ul>
+                            <li><span class="menu-caminho">File → New → Project</span> e dê o nome <code>Pisca_LED_NE555</code>.</li>
+                            <li>No painel <b>Library</b> (<kbd>Shift</kbd>+<kbd>F</kbd>), busque <code>NE555</code> e escolha uma versão <b>DIP-8</b>.</li>
+                            <li>Em <b>Commonly Library</b>, coloque 3 resistores, 1 capacitor polarizado, 1 capacitor comum e 1 LED. Busque um borne de 2 vias na Library.</li>
+                            <li>Clique em cada peça e preencha <b>Name</b> (R1, R2…) e o valor no painel da direita. Use <kbd>Espaço</kbd> para girar.</li>
+                            <li>Ligue com a ferramenta <b>Wire</b> (<kbd>W</kbd>) e use os símbolos <b>VCC</b> (renomeie para +5V) e <b>GND</b> de <i>Wiring Tools</i>.</li>
+                            <li>Confira as redes e os pinos soltos no <b>Design Manager</b>.</li>
+                        </ul>
+                    </li>
+
+                    <li class="etapa">
+                        <span class="no" aria-hidden="true"></span>
+                        <span class="etapa-num">Passo 3 · encapsulamentos · 15 min</span>
+                        <h3>Associe os footprints</h3>
+                        <ul>
+                            <li>Selecione cada peça e confira o campo <b>Package</b>, ou use <span class="menu-caminho">Tools → Footprint Manager</span>.</li>
+                            <li>NE555: <code>DIP-8</code> · resistores: <code>AXIAL-0.4</code> · LED: 5 mm THT.</li>
+                            <li>C1: radial polarizado (Ø 5 mm) · C2: cerâmico THT · J1: 2 vias, passo 5,08 mm.</li>
+                            <li>Confira se os números dos pinos do símbolo batem com os do footprint (LED: ânodo e cátodo).</li>
+                        </ul>
+                    </li>
+
+                    <li class="etapa">
+                        <span class="no" aria-hidden="true"></span>
+                        <span class="etapa-num">Passo 4 · PCB · 25 min</span>
+                        <h3>Converta e posicione</h3>
+                        <ul>
+                            <li><span class="menu-caminho">Design → Convert to PCB</span>. Deixe as unidades em <b>mm</b>.</li>
+                            <li>Ajuste o contorno para <b>65 × 45 mm</b> (no assistente da conversão ou em <span class="menu-caminho">Tools → Set Board Outline</span>).</li>
+                            <li>Organize como na referência: borne à esquerda, CI no centro, LED visível à direita.</li>
+                            <li>Deixe os cantos livres para furos de fixação, se quiser.</li>
+                        </ul>
+                    </li>
+
+                    <li class="etapa">
+                        <span class="no" aria-hidden="true"></span>
+                        <span class="etapa-num">Passo 5 · roteamento · 25 min</span>
+                        <h3>Desenhe as trilhas</h3>
+                        <ul>
+                            <li>Em <span class="menu-caminho">Design → Design Rule…</span> use trilha de 0,5 mm e folga (clearance) de 0,3 mm. Para +5 V e GND, use 0,8 mm.</li>
+                            <li>Siga as linhas finas de conexão (<i>ratlines</i>) com a ferramenta <b>Track</b> (<kbd>W</kbd>). Troque de camada com <kbd>T</kbd> (cima, vermelho) e <kbd>B</kbd> (baixo, azul).</li>
+                            <li>Não pode sobrar nenhuma ratline.</li>
+                            <li>Rode <span class="menu-caminho">Design → Check DRC</span> e corrija tudo o que aparecer.</li>
+                        </ul>
+                    </li>
+
+                    <li class="etapa">
+                        <span class="no" aria-hidden="true"></span>
+                        <span class="etapa-num">Passo 6 · visualização · 15 min</span>
+                        <h3>Inspecione em 3D e exporte</h3>
+                        <ul>
+                            <li><span class="menu-caminho">View → 3D View</span>: gire a placa e confira posições e alturas.</li>
+                            <li>Confirme o espaço do borne e o acesso ao LED; capture a vista 3D.</li>
+                            <li>Exporte esquema e PCB em <span class="menu-caminho">File → Export → PNG</span> e salve o projeto.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ============ 07 · ERROS FREQUENTES ============ -->
+        <section id="erros" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 10h14M34 10h14" /><circle cx="24" cy="10" r="9" /><path class="raio" d="M20 6l8 8M28 6l-8 8" /></svg>
+                            <span>07 · erros frequentes</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>O que costuma dar errado</h2>
+                    </div>
+                    <p class="cabecalho-desc">Antes de chamar o professor, confira esta lista. A maioria dos problemas está aqui.</p>
+                </header>
+
+                <div class="erros">
+                    <div>
+                        <h3>No esquema</h3>
+                        <ul class="erros-lista" data-cascata>
+                            <li><b>LED invertido</b><span>Confira ânodo (A) e cátodo (K).</span></li>
+                            <li><b>C1 invertido</b><span>Positivo no nó 2/6, negativo no GND.</span></li>
+                            <li><b>Pino 4 solto</b><span>RESET precisa ir ao +5 V.</span></li>
+                            <li><b>C2 no lugar errado</b><span>10 nF do pino 5 ao GND.</span></li>
+                            <li><b>Pinos 2 e 6 separados</b><span>Os dois precisam estar unidos.</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Na PCB e no 3D</h3>
+                        <ul class="erros-lista" data-cascata>
+                            <li><b>Footprint incompatível</b><span>Compare pinagem e espaçamento antes de rotear.</span></li>
+                            <li><b>Trilhas sobrepostas</b><span>Corrija os avisos do DRC.</span></li>
+                            <li><b>Ligação esquecida</b><span>Não pode sobrar ratline.</span></li>
+                            <li><b>Texto em cima do componente</b><span>Reorganize a serigrafia.</span></li>
+                            <li><b>Peça sem modelo 3D</b><span>O footprint não tem modelo associado. Isso não é erro de ligação.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 08 · ENTREGA ============ -->
+        <section id="entrega" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 10h16M32 10h16M16 3h16l-8 12zM16 16h16" /><path class="raio" d="M34 4l5-4M38 9l5-4" /></svg>
+                            <span>08 · entrega e avaliação</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>Checklist e rubrica</h2>
+                    </div>
+                    <p class="cabecalho-desc">Marque cada etapa concluída. O progresso fica salvo <strong>neste navegador</strong> e não é enviado ao professor.</p>
+                </header>
+
+                <div class="entrega-grade">
+                    <div class="checklist-caixa">
+                        <div class="checklist-topo">
+                            <span id="check-status" aria-live="polite">0 de 7 itens concluídos</span>
+                            <button type="button" class="link-baixar link-limpar" id="check-limpar">limpar</button>
+                        </div>
+                        <div class="medidor" aria-hidden="true"><span id="check-barra"></span></div>
+                        <ul class="checklist" id="checklist"></ul>
+                    </div>
+
+                    <div>
+                        <div class="bom-moldura">
+                            <table class="bom rubrica">
+                                <caption class="sr-only">Rubrica de avaliação</caption>
+                                <thead><tr><th scope="col">Critério</th><th scope="col">Pontos</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Planejamento e identificação dos componentes</td><td class="bom-fmt">1,0</td></tr>
+                                    <tr><td>Esquema elétrico, pinagem e polaridades</td><td class="bom-fmt">2,0</td></tr>
+                                    <tr><td>Footprints e organização da PCB</td><td class="bom-fmt">2,0</td></tr>
+                                    <tr><td>Trilhas e conexões corretas</td><td class="bom-fmt">2,0</td></tr>
+                                    <tr><td>Conferência no Design Manager e DRC</td><td class="bom-fmt">1,0</td></tr>
+                                    <tr><td>Vista 3D e explicação oral ou escrita</td><td class="bom-fmt">2,0</td></tr>
+                                </tbody>
+                                <tfoot><tr><th scope="row">Total</th><td class="bom-fmt"><b>10,0</b></td></tr></tfoot>
+                            </table>
+                        </div>
+                        <h3 class="enviar-titulo">O que enviar</h3>
+                        <ul class="arquivos">
+                            <li><code>esquema.png</code></li>
+                            <li><code>pcb.png</code></li>
+                            <li><code>pcb-3d.png</code></li>
+                            <li>link do projeto no EasyEDA (ou arquivo editável, conforme orientação do professor)</li>
+                            <li>texto curto explicando a função de R1, R2, R3, C1 e do NE555</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ 09 · DESAFIOS ============ -->
+        <section id="desafios" class="secao" data-cena>
+            <div class="moldura">
+                <header class="cabecalho">
+                    <div>
+                        <p class="etiqueta">
+                            <svg class="simbolo" viewBox="0 0 48 20" aria-hidden="true"><path d="M0 10h18M30 10h18M18 2v16M24 6v8" /><path class="raio" d="M34 4h4M36 2v4" /></svg>
+                            <span>09 · para quem terminar primeiro</span>
+                        </p>
+                        <h2 class="titulo" data-palavras>Desafios extras</h2>
+                    </div>
+                </header>
+                <div class="desafios" data-cascata>
+                    <article class="chip-ci">
+                        <div class="chip-topo"><span class="chip-codigo">DS-A</span><span class="chip-cat">velocidade</span></div>
+                        <h3>Mais rápido</h3>
+                        <p>Troque R2 de <b>100 kΩ</b> para <b>47 kΩ</b>. Calcule a nova frequência, confira no oscilador e explique por que o LED pisca mais rápido.</p>
+                    </article>
+                    <article class="chip-ci">
+                        <div class="chip-topo"><span class="chip-codigo">DS-B</span><span class="chip-cat">identidade visual</span></div>
+                        <h3>Placa com assinatura</h3>
+                        <p>Na serigrafia, coloque o nome do projeto, a identificação da equipe e a marcação de polaridade do borne (+ e −).</p>
+                    </article>
+                    <article class="chip-ci">
+                        <div class="chip-topo"><span class="chip-codigo">DS-C</span><span class="chip-cat">confiabilidade</span></div>
+                        <h3>Desacoplamento</h3>
+                        <p>Acrescente <b>C3 = 100 nF</b> entre os pinos 8 (+5 V) e 1 (GND), bem perto do NE555. Explique por que circuitos integrados costumam precisar disso.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <div class="rodape-inner">
+            <div class="rodape-marca">
+                <svg class="marca-simbolo" viewBox="0 0 44 20" aria-hidden="true"><path d="M1 10h9l2.5-6 4 12 4-12 4 12 4-12 2.5 6h12" /><circle cx="1.5" cy="10" r="1.5" /><circle cx="42.5" cy="10" r="1.5" /></svg>
+                <p>Pisca-LED NE555</p>
+            </div>
+            <dl class="rodape-dados">
+                <div><dt>Disciplina</dt><dd><a href="../../index.html">Eletrônica Básica</a></dd></div>
+                <div><dt>Docente</dt><dd>Prof. Ábner Lucas</dd></div>
+                <div><dt>Instituição</dt><dd>IFPA Campus Breves</dd></div>
+                <div><dt>Referência</dt><dd>NE555 astável · 5 V</dd></div>
+            </dl>
+        </div>
+        <p class="so-impressao">Nome: ____________________________________ Turma: __________ Data: ____/____/______</p>
+        <p class="rodape-serigrafia" aria-hidden="true">AT-02 · PISCA-LED NE555 · REV 2026 · CONSULTE A FOLHA DE DADOS ANTES DE MONTAR</p>
+    </footer>
+
+    <script src="../../logica.js?v=2026.11.16b"></script>
+    <script src="../../script.js?v=2026.11.16b"></script>
+    <script src="roteiro.js?v=2026.11.16b"></script>
+</body>
+</html>

@@ -64,7 +64,9 @@
     const barra = $('#progresso-barra');
     const cenas = $$('[data-cena]');
     const linksMenu = $$('a', menu);
-    const secoes = linksMenu.map((a) => $(a.getAttribute('href'))).filter(Boolean);
+    const secoes = linksMenu
+        .filter((a) => (a.getAttribute('href') || '').startsWith('#'))
+        .map((a) => $(a.getAttribute('href'))).filter(Boolean);
     const trilha = $('#trilha-lista');
     const corrente = $('#trilha-corrente');
     const etapas = $$('.etapa');
@@ -151,7 +153,7 @@
     });
     $('.abertura-titulo')?.style.setProperty('--base', '120ms');
 
-    $$('.diario, .chips-atividades, .bom tbody, .instrumentos, .trilha').forEach((lista) => {
+    $$('.diario, .chips-atividades, .bom tbody, .instrumentos, .trilha, [data-cascata]').forEach((lista) => {
         lista.classList.add('cascata');
         Array.from(lista.children).forEach((filho, i) => filho.style.setProperty('--i', i));
     });
@@ -178,6 +180,7 @@
     const vazio = $('#atividades-vazio');
 
     const moverCursor = (botao) => {
+        if (!botao || !cursor) return;
         cursor.style.width = `${botao.offsetWidth}px`;
         cursor.style.transform = `translateX(${botao.offsetLeft}px)`;
     };
@@ -193,7 +196,7 @@
                 c.classList.toggle('escondido', !mostra);
                 if (mostra) visiveis++;
             });
-            vazio.hidden = visiveis > 0;
+            if (vazio) vazio.hidden = visiveis > 0;
         });
         // setas do teclado entre as opções
         botao.addEventListener('keydown', (e) => {

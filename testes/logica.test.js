@@ -45,6 +45,19 @@ test('LED: com valores padrão (9 V, 330 Ω) acende de forma segura', () => {
     assert.equal(E.circuitoLed(9, 470).estado, 'ideal');
 });
 
+test('NE555 astável: valores do roteiro (10 kΩ, 100 kΩ, 10 µF)', () => {
+    const t = E.ne555Astavel({ r1: 10e3, r2: 100e3, c: 10e-6 });
+    assert.ok(Math.abs(t.frequencia - 0.687) < 0.002);   // ≈ 0,69 Hz
+    assert.ok(Math.abs(t.periodo - 1.456) < 0.002);      // ≈ 1,46 s
+    assert.ok(Math.abs(t.tAlto - 0.762) < 0.002);
+    assert.ok(Math.abs(t.tBaixo - 0.693) < 0.002);
+    assert.ok(t.cicloAtivo > 0.5);                       // aceso um pouco mais que apagado
+    // Desafio A: R2 = 47 kΩ pisca mais rápido
+    const a = E.ne555Astavel({ r1: 10e3, r2: 47e3, c: 10e-6 });
+    assert.ok(Math.abs(a.frequencia - 1.387) < 0.003);
+    assert.throws(() => E.ne555Astavel({ r1: 0, r2: 1, c: 1 }));
+});
+
 test('LED: sem resistor adequado queima; abaixo de 2 V não acende', () => {
     assert.equal(E.circuitoLed(12, 100).estado, 'queimado');
     assert.equal(E.circuitoLed(1.5, 330).estado, 'apagado');

@@ -131,5 +131,18 @@
         };
     }
 
-    return { lerValor, formatar, leiDeOhm, CORES, corPorNome, valorPorCores, coresPorValor, LED, circuitoLed };
+    /* ---------------- NE555 em modo astável ---------------- */
+    /**
+     * Tempos do oscilador astável clássico (R1 entre VCC e pino 7, R2 entre 7 e 2/6, C entre 2/6 e GND).
+     * tAlto = 0,693·(R1+R2)·C (LED aceso) · tBaixo = 0,693·R2·C (LED apagado) · f ≈ 1,44 / ((R1 + 2R2)·C)
+     */
+    function ne555Astavel({ r1, r2, c }) {
+        if (!(r1 > 0) || !(r2 > 0) || !(c > 0)) throw new Error('R1, R2 e C precisam ser positivos.');
+        const tAlto = Math.LN2 * (r1 + r2) * c;
+        const tBaixo = Math.LN2 * r2 * c;
+        const periodo = tAlto + tBaixo;
+        return { tAlto, tBaixo, periodo, frequencia: 1 / periodo, cicloAtivo: tAlto / periodo };
+    }
+
+    return { lerValor, formatar, leiDeOhm, CORES, corPorNome, valorPorCores, coresPorValor, LED, circuitoLed, ne555Astavel };
 });

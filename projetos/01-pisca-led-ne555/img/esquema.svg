@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" font-family="Arial, Helvetica, sans-serif" role="img" aria-labelledby="t d">
+<title id="t">Esquema elétrico do pisca-LED com NE555 em modo astável</title>
+<desc id="d">J1 alimenta +5 V e GND. R1 (10 kΩ) liga +5 V ao pino 7. R2 (100 kΩ) liga o pino 7 ao nó dos pinos 2 e 6. C1 (10 µF, positivo no nó 2/6) vai desse nó ao GND. C2 (10 nF) liga o pino 5 ao GND. Pinos 4 e 8 em +5 V, pino 1 em GND. O pino 3 aciona R3 (330 Ω) e o LED1, com o cátodo no GND.</desc>
+<defs><pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="#d6dbe4"/></pattern>
+<marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8b0000"/></marker></defs>
+<rect width="720" height="480" fill="#fff"/><rect width="720" height="480" fill="url(#g)"/>
+<!-- alimentação -->
+<path d="M120 220V60H420" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M270 60V40" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M256 40H284" stroke="#1f3fa6" stroke-width="3"/><text x="270" y="30" fill="#0b5394" font-size="15" font-weight="600" text-anchor="middle">+5V</text>
+<path d="M340 60V110" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M420 60V110" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M120 260V420H620" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M270 420V436M254 436H286M260 443H280M266 450H274" stroke="#1f3fa6" stroke-width="2.6" fill="none"/><text x="270" y="470" fill="#0b5394" font-size="15" font-weight="600" text-anchor="middle">GND</text>
+<circle cx="200" cy="60" r="4.5" fill="#1f3fa6"/><circle cx="270" cy="60" r="4.5" fill="#1f3fa6"/><circle cx="340" cy="60" r="4.5" fill="#1f3fa6"/><circle cx="200" cy="420" r="4.5" fill="#1f3fa6"/><circle cx="270" cy="420" r="4.5" fill="#1f3fa6"/><circle cx="340" cy="420" r="4.5" fill="#1f3fa6"/><circle cx="420" cy="420" r="4.5" fill="#1f3fa6"/>
+<!-- J1 borne -->
+<rect x="50" y="200" width="40" height="80" fill="#fff" stroke="#8b0000" stroke-width="2.2"/>
+<path d="M90 220H120" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M90 260H120" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="70" y="192" fill="#8b0000" font-size="15" font-weight="600" text-anchor="middle">J1</text><text x="70" y="226" fill="#8b0000" font-size="12" font-weight="600" text-anchor="middle">1</text><text x="70" y="266" fill="#8b0000" font-size="12" font-weight="600" text-anchor="middle">2</text>
+<text x="70" y="300" fill="#1c2333" font-size="12" font-weight="500" text-anchor="middle">borne</text><text x="70" y="314" fill="#1c2333" font-size="12" font-weight="500" text-anchor="middle">2 vias</text>
+<!-- R1, R2, C1 -->
+<path d="M200 60V95" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="191" y="95" width="18" height="50" fill="#fff" stroke="#8b0000" stroke-width="2.2"/>
+<text x="218" y="117" fill="#8b0000" font-size="15" font-weight="600" text-anchor="start">R1</text><text x="218" y="135" fill="#1c2333" font-size="15" font-weight="500" text-anchor="start">10kΩ</text><path d="M200 145V195" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="191" y="195" width="18" height="40" fill="#fff" stroke="#8b0000" stroke-width="2.2"/>
+<text x="182" y="212" fill="#8b0000" font-size="15" font-weight="600" text-anchor="end">R2</text><text x="182" y="230" fill="#1c2333" font-size="15" font-weight="500" text-anchor="end">100kΩ</text><path d="M200 235V290" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M200 170H270" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="200" cy="170" r="4.5" fill="#1f3fa6"/>
+<path d="M200 250H250" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 230V270" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 230H270" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 270H270" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="200" cy="250" r="4.5" fill="#1f3fa6"/><circle cx="250" cy="250" r="4.5" fill="#1f3fa6"/>
+<path d="M182 290H218" stroke="#8b0000" stroke-width="3"/><rect x="182" y="299" width="36" height="6" fill="#8b0000"/>
+<text x="170" y="288" fill="#8b0000" font-size="18" font-weight="600" text-anchor="middle">+</text>
+<path d="M200 305V420" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="226" y="298" fill="#8b0000" font-size="15" font-weight="600" text-anchor="start">C1</text><text x="226" y="316" fill="#1c2333" font-size="15" font-weight="500" text-anchor="start">10µF</text>
+<!-- U1 NE555 -->
+<rect x="300" y="140" width="160" height="200" rx="3" fill="#fff8f2" stroke="#8b0000" stroke-width="2.4"/>
+<text x="380" y="238" fill="#8b0000" font-size="17" font-weight="600" text-anchor="middle">U1</text><text x="380" y="258" fill="#1c2333" font-size="17" font-weight="600" text-anchor="middle">NE555</text>
+<path d="M270 170L300 170" stroke="#8b0000" stroke-width="2.2"/>
+<text x="285" y="165" fill="#8b0000" font-size="12" font-weight="500" text-anchor="middle">7</text>
+<text x="308" y="175" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="start">DIS</text>
+<path d="M270 230L300 230" stroke="#8b0000" stroke-width="2.2"/>
+<text x="285" y="225" fill="#8b0000" font-size="12" font-weight="500" text-anchor="middle">6</text>
+<text x="308" y="235" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="start">THR</text>
+<path d="M270 270L300 270" stroke="#8b0000" stroke-width="2.2"/>
+<text x="285" y="265" fill="#8b0000" font-size="12" font-weight="500" text-anchor="middle">2</text>
+<text x="308" y="275" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="start">TRIG</text>
+<path d="M340 110L340 140" stroke="#8b0000" stroke-width="2.2"/>
+<text x="347" y="129" fill="#8b0000" font-size="12" font-weight="500" text-anchor="start">8</text>
+<text x="340" y="158" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="middle">VCC</text>
+<path d="M420 110L420 140" stroke="#8b0000" stroke-width="2.2"/>
+<text x="427" y="129" fill="#8b0000" font-size="12" font-weight="500" text-anchor="start">4</text>
+<text x="420" y="158" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="middle">RST</text>
+<path d="M340 340L340 370" stroke="#8b0000" stroke-width="2.2"/>
+<text x="347" y="359" fill="#8b0000" font-size="12" font-weight="500" text-anchor="start">1</text>
+<text x="340" y="330" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="middle">GND</text>
+<path d="M420 340L420 370" stroke="#8b0000" stroke-width="2.2"/>
+<text x="427" y="359" fill="#8b0000" font-size="12" font-weight="500" text-anchor="start">5</text>
+<text x="420" y="330" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="middle">CV</text>
+<path d="M460 230L490 230" stroke="#8b0000" stroke-width="2.2"/>
+<text x="475" y="225" fill="#8b0000" font-size="12" font-weight="500" text-anchor="middle">3</text>
+<text x="452" y="235" fill="#5b2a2a" font-size="13" font-weight="600" text-anchor="end">OUT</text>
+<!-- pino 1 e C2 -->
+<path d="M340 370V420" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M420 370V384" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M402 384H438M402 394H438" stroke="#8b0000" stroke-width="3"/><path d="M420 394V420" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="446" y="386" fill="#8b0000" font-size="15" font-weight="600" text-anchor="start">C2</text><text x="446" y="404" fill="#1c2333" font-size="15" font-weight="500" text-anchor="start">10nF</text>
+<!-- saída: R3 e LED -->
+<path d="M490 230H510" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="510" y="221" width="60" height="18" fill="#fff" stroke="#8b0000" stroke-width="2.2"/>
+<text x="540" y="212" fill="#8b0000" font-size="15" font-weight="600" text-anchor="middle">R3</text><text x="540" y="258" fill="#1c2333" font-size="15" font-weight="500" text-anchor="middle">330Ω</text>
+<path d="M570 230H620V266" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M602 266H638L620 294Z" fill="#fff" stroke="#8b0000" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="M602 294H638" stroke="#8b0000" stroke-width="3"/>
+<path d="M642 270l18 -14M646 284l18 -14" stroke="#8b0000" stroke-width="2" marker-end="url(#seta)"/>
+<path d="M620 294V420" fill="none" stroke="#1f3fa6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="648" y="300" fill="#8b0000" font-size="15" font-weight="600" text-anchor="start">LED1</text><text x="648" y="318" fill="#1c2333" font-size="12" font-weight="500" text-anchor="start">vermelho</text>
+<text x="596" y="272" fill="#8b0000" font-size="12" font-weight="600" text-anchor="end">A</text><text x="596" y="298" fill="#8b0000" font-size="12" font-weight="600" text-anchor="end">K</text>
+</svg>

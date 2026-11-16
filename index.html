@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026.11.16">
+    <link rel="stylesheet" href="style.css?v=2026.11.16b">
 </head>
 <body>
     <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -198,6 +198,14 @@
                         Copie um <li class="registro"> e cole no TOPO da lista.
                         data-tipo: info (azul) · prazo (âmbar) · ok (verde)
                     -->
+                    <li class="registro" data-tipo="ok">
+                        <time class="registro-data" datetime="2026-11-16"><b>16</b> nov 2026</time>
+                        <div class="registro-corpo">
+                            <span class="registro-tipo"><i class="led-ponto"></i>Nova atividade</span>
+                            <h3>Prática AT-02: Pisca-LED com NE555</h3>
+                            <p>O roteiro da prática no EasyEDA Std já está disponível em <a href="projetos/01-pisca-led-ne555/index.html">Atividades</a>: esquema de referência, placa, passo a passo, checklist e rubrica de avaliação.</p>
+                        </div>
+                    </li>
                     <li class="registro" data-tipo="info">
                         <time class="registro-data" datetime="2026-11-15"><b>15</b> nov 2026</time>
                         <div class="registro-corpo">
@@ -244,21 +252,27 @@
 
                     <article class="chip-ci destaque" data-categoria="pratica">
                         <div class="chip-topo">
+                            <span class="chip-codigo">AT-02</span>
+                            <span class="chip-cat">prática de laboratório · individual ou dupla · 3–4 aulas</span>
+                        </div>
+                        <h3>Pisca-LED com NE555: do esquema à placa 3D</h3>
+                        <p>Monte no EasyEDA Std um oscilador astável com NE555: esquema, encapsulamentos, layout da PCB, trilhas, DRC e vista 3D. O roteiro traz um oscilador interativo, o esquema e a placa de referência, o checklist e a rubrica.</p>
+                        <img class="chip-foto" src="projetos/01-pisca-led-ne555/img/pcb-3d.svg?v=2026.11.16b" width="820" height="560" alt="" loading="lazy">
+                        <ul class="chip-tags"><li>NE555 astável</li><li>EasyEDA Std</li><li>PCB</li><li>3D</li></ul>
+                        <a href="projetos/01-pisca-led-ne555/index.html" class="botao botao-cobre">
+                            Abrir roteiro
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+                        </a>
+                    </article>
+
+                    <article class="chip-ci" data-categoria="pratica">
+                        <div class="chip-topo">
                             <span class="chip-codigo">AT-01</span>
                             <span class="chip-cat">prática interativa · individual</span>
                         </div>
                         <h3>Laboratório virtual: Lei de Ohm e código de cores</h3>
-                        <p>Confira seus cálculos de tensão, corrente e resistência e identifique resistores pelas faixas de cor antes de montar na protoboard.</p>
-                        <svg class="chip-ilustra" viewBox="0 0 260 60" aria-hidden="true">
-                            <path d="M0 30h60M200 30h60" />
-                            <rect x="60" y="14" width="140" height="32" rx="14" />
-                            <rect class="f" x="80" y="14" width="10" height="32" fill="#ef7a1a" />
-                            <rect class="f" x="98" y="14" width="10" height="32" fill="#ef7a1a" />
-                            <rect class="f" x="116" y="14" width="10" height="32" fill="#7a3b12" />
-                            <rect class="f" x="170" y="14" width="10" height="32" fill="#c9a03a" />
-                        </svg>
-                        <ul class="chip-tags"><li>Lei de Ohm</li><li>Potência</li><li>Resistores</li></ul>
-                        <a href="#laboratorio" class="botao botao-cobre">
+                        <p>Confira seus cálculos de tensão, corrente e resistência e identifique resistores pelas faixas de cor.</p>
+                        <a href="#laboratorio" class="botao botao-linha">
                             Abrir laboratório
                             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
                         </a>
@@ -319,6 +333,12 @@
                             <tr><th scope="col">Ref.</th><th scope="col">Item</th><th scope="col">Formato</th><th scope="col"><span class="sr-only">Ação</span></th></tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td class="bom-ref">ROT-02</td>
+                                <td><strong>Roteiro: Pisca-LED com NE555</strong><span>Esquema, placa de referência e passo a passo no EasyEDA Std. A página tem versão para imprimir ou salvar em PDF.</span></td>
+                                <td class="bom-fmt">página · PDF</td>
+                                <td class="bom-acao"><a class="link-baixar" href="projetos/01-pisca-led-ne555/index.html">abrir</a></td>
+                            </tr>
                             <tr>
                                 <td class="bom-ref">REF-01</td>
                                 <td><strong>Código de cores de resistores</strong><span>Dígitos, multiplicador e tolerância das faixas, no laboratório virtual.</span></td>
@@ -489,7 +509,7 @@
         <p class="rodape-serigrafia" aria-hidden="true">EB-PORTAL · REV 2026 · MATERIAL DIDÁTICO</p>
     </footer>
 
-    <script src="logica.js?v=2026.11.16"></script>
-    <script src="script.js?v=2026.11.16"></script>
+    <script src="logica.js?v=2026.11.16b"></script>
+    <script src="script.js?v=2026.11.16b"></script>
 </body>
 </html>
