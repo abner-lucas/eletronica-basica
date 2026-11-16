@@ -50,7 +50,8 @@ O `index.html` traz comentários `COMO ADICIONAR...` em cada seção. Em resumo:
 1. **Aviso** → copie um `<li class="registro">` para o topo da lista e altere a data, o tipo (`data-tipo="info"`, `"prazo"` ou `"ok"`) e o texto.
 2. **Material (PDF)** → coloque o arquivo em `docs/` e copie uma linha `<tr>` da tabela de materiais, com `<a class="link-baixar" href="./docs/Arquivo.pdf" download>baixar</a>`.
 3. **Atividade** → crie `projetos/NN-nome/index.html` (ou use um PDF em `docs/`), copie um `<article class="chip-ci">` e defina `data-categoria` como `pratica`, `exercicio` ou `avaliacao`. Para liberar uma atividade “em breve”, remova a classe `em-breve` e o carimbo e troque o texto bloqueado por um link `botao botao-cobre`.
-4. Faça commit e push na branch `main` — o GitHub Pages atualiza o site em cerca de 1 minuto.
+4. Se alterar `style.css`, `script.js` ou `logica.js`, troque o número `?v=...` nos links do `index.html` (ex.: `?v=2026.11.20`). Assim o navegador dos alunos baixa a versão nova em vez de usar a antiga guardada em cache.
+5. Faça commit e push na branch `main` — o GitHub Pages atualiza o site em cerca de 1 minuto.
 
 ---
 
