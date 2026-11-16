@@ -57,16 +57,6 @@ O `index.html` traz comentários `COMO ADICIONAR...` em cada seção. Em resumo:
 
 ---
 
-## 🔌 Roteiro AT-02 · Pisca-LED com NE555
-
-Página: `projetos/01-pisca-led-ne555/`. As três imagens (`img/esquema.svg`, `img/pcb-topo.svg`, `img/pcb-3d.svg`) são **geradas por código** a partir de `ferramentas/ne555-layout.js`, que guarda a posição de cada pad e trilha em milímetros.
-
-- Para mudar a placa, edite `ferramentas/ne555-layout.js` e rode `node ferramentas/gerar-imagens-ne555.js`.
-- Depois rode `node --test testes/ne555-layout.test.js`: o teste confere se todas as ligações do esquema existem nas trilhas, se não há curto entre redes e se nenhuma trilha passa sobre o pad de outra rede.
-- Troque o `?v=...` das imagens no HTML para os alunos não verem a versão antiga em cache.
-
----
-
 ## 🛠️ Conteúdos Trabalhados
 
 - **Grandezas elétricas**: tensão, corrente, resistência e potência; unidades e prefixos.
