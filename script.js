@@ -1,285 +1,375 @@
 /**
- * PORTAL DE ELETRÔNICA BÁSICA - SCRIPT PRINCIPAL
+ * PORTAL DE ELETRÔNICA BÁSICA - INTERFACE
  * Prof. Ábner Lucas · IFPA Campus Breves
+ * Os cálculos ficam em logica.js (window.Eletronica); aqui só a interface.
  */
+(function () {
+    'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Menu Mobile Toggle
-    const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.getElementById('nav-menu');
+    const E = window.Eletronica;
+    const $ = (sel, raiz = document) => raiz.querySelector(sel);
+    const $$ = (sel, raiz = document) => Array.from(raiz.querySelectorAll(sel));
+    const reduzir = matchMedia('(prefers-reduced-motion: reduce)');
+    const raiz = document.documentElement;
 
-    if (menuToggle && navMenu) {
-        menuToggle.addEventListener('click', () => {
-            const aberto = navMenu.classList.toggle('active');
-            menuToggle.classList.toggle('open', aberto);
-            menuToggle.setAttribute('aria-expanded', String(aberto));
-        });
+    /* ------------------------------------------------------
+       1. Tema claro/escuro (persistido; transição circular)
+       ------------------------------------------------------ */
+    const botaoTema = $('#botao-tema');
+    const sincronizarBotaoTema = () => {
+        botaoTema.setAttribute('aria-pressed', String(raiz.dataset.tema === 'escuro'));
+    };
+    sincronizarBotaoTema();
 
-        // Fechar menu mobile ao clicar em um link
-        navMenu.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                menuToggle.classList.remove('open');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            });
-        });
-    }
-
-    // 2. Filtro Interativo de Atividades
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.project-card');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const filterValue = btn.getAttribute('data-filter');
-
-            projectCards.forEach(card => {
-                const category = card.getAttribute('data-category');
-                if (filterValue === 'all' || category === filterValue) {
-                    card.style.display = 'flex';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 50);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(10px)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 200);
-                }
-            });
+    botaoTema.addEventListener('click', (ev) => {
+        const proximo = raiz.dataset.tema === 'escuro' ? 'claro' : 'escuro';
+        const aplicar = () => {
+            raiz.dataset.tema = proximo;
+            sincronizarBotaoTema();
+            try { localStorage.setItem('eb:tema', proximo); } catch (e) { /* navegação privada */ }
+        };
+        if (!document.startViewTransition || reduzir.matches) { aplicar(); return; }
+        const x = ev.clientX || innerWidth - 40, y = ev.clientY || 30;
+        const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        document.startViewTransition(aplicar).ready.then(() => {
+            raiz.animate(
+                { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+                { duration: 650, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' }
+            );
         });
     });
 
-    // 3. Destaque do link da navbar conforme a rolagem da página
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
+    /* ------------------------------------------------------
+       2. Menu móvel (abre em círculo, fecha com Esc)
+       ------------------------------------------------------ */
+    const botaoMenu = $('#botao-menu');
+    const menu = $('#menu');
+    const definirMenu = (aberto) => {
+        menu.classList.toggle('aberto', aberto);
+        botaoMenu.setAttribute('aria-expanded', String(aberto));
+        botaoMenu.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+        document.body.style.overflow = aberto ? 'hidden' : '';
+    };
+    botaoMenu.addEventListener('click', () => definirMenu(!menu.classList.contains('aberto')));
+    $$('a', menu).forEach((a) => a.addEventListener('click', () => definirMenu(false)));
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menu.classList.contains('aberto')) { definirMenu(false); botaoMenu.focus(); }
+    });
 
-    window.addEventListener('scroll', () => {
-        const scrollY = window.pageYOffset;
+    /* ------------------------------------------------------
+       3. Rolagem: progresso, cabeçalho que some, seção ativa,
+          transição das seções e corrente na trilha
+       ------------------------------------------------------ */
+    const topo = $('#topo');
+    const barra = $('#progresso-barra');
+    const cenas = $$('[data-cena]');
+    const linksMenu = $$('a', menu);
+    const secoes = linksMenu.map((a) => $(a.getAttribute('href'))).filter(Boolean);
+    const trilha = $('#trilha-lista');
+    const corrente = $('#trilha-corrente');
+    const etapas = $$('.etapa');
+    let ultimoY = scrollY, agendado = false;
 
-        sections.forEach(current => {
-            const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop - 120;
-            const sectionId = current.getAttribute('id');
+    const limitar = (v) => Math.min(1, Math.max(0, v));
 
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                navLinks.forEach(link => {
-                    link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
-                });
-            }
-        });
-    }, { passive: true });
+    function aoRolar() {
+        agendado = false;
+        const y = scrollY, vh = innerHeight;
+        const total = document.documentElement.scrollHeight - vh;
+        barra.style.transform = `scaleX(${total > 0 ? y / total : 0})`;
 
-    // ---------------------------------------------------------
-    // Utilitários: leitura e formatação de valores elétricos
-    // ---------------------------------------------------------
-    const PREFIXOS = { p: 1e-12, n: 1e-9, u: 1e-6, 'µ': 1e-6, m: 1e-3, k: 1e3, K: 1e3, M: 1e6, G: 1e9 };
+        // cabeçalho some ao descer e volta ao subir
+        if (!menu.classList.contains('aberto')) {
+            topo.classList.toggle('oculto', y > 240 && y > ultimoY + 4);
+            if (y < ultimoY - 4) topo.classList.remove('oculto');
+        }
+        ultimoY = y;
 
-    // Aceita "0,02", "20m", "4,7k", "2k2", "1.5M"
-    function lerValor(texto) {
-        let t = String(texto).trim().replace(/\s/g, '').replace(',', '.');
-        if (t === '') return null;
-        t = t.replace(/(V|A|Ω|ohm)$/i, '');
-        // notação 2k2 → 2.2k
-        const embutido = t.match(/^(\d+)([pnuµmkKMG])(\d+)$/);
-        if (embutido) t = `${embutido[1]}.${embutido[3]}${embutido[2]}`;
-        const m = t.match(/^(-?\d*\.?\d+(?:e-?\d+)?)([pnuµmkKMG])?$/);
-        if (!m) return NaN;
-        return parseFloat(m[1]) * (m[2] ? PREFIXOS[m[2]] : 1);
-    }
-
-    // Formata com prefixo de engenharia: 0.0212 → "21,2 m"
-    function formatar(valor, unidade) {
-        if (!isFinite(valor)) return '—';
-        if (valor === 0) return `0 ${unidade}`;
-        const escalas = [
-            [1e9, 'G'], [1e6, 'M'], [1e3, 'k'], [1, ''],
-            [1e-3, 'm'], [1e-6, 'µ'], [1e-9, 'n'], [1e-12, 'p']
-        ];
-        const abs = Math.abs(valor);
-        const [fator, prefixo] = escalas.find(([f]) => abs >= f) || escalas[escalas.length - 1];
-        const numero = (valor / fator).toLocaleString('pt-BR', { maximumSignificantDigits: 4 });
-        return `${numero} ${prefixo}${unidade}`;
-    }
-
-    // 4. Circuito interativo do topo (bateria + resistor + LED)
-    const circuito = document.getElementById('hero-circuit');
-    const chave = document.getElementById('circuit-switch');
-    const leitura = document.getElementById('readout-current');
-
-    if (circuito && chave && leitura) {
-        const TENSAO = 9, RESISTOR = 330, QUEDA_LED = 2; // LED vermelho ≈ 2 V
-        const correnteLigado = (TENSAO - QUEDA_LED) / RESISTOR;
-
-        const atualizarCircuito = (ligado) => {
-            circuito.dataset.on = String(ligado);
-            chave.setAttribute('aria-checked', String(ligado));
-            leitura.textContent = ligado ? formatar(correnteLigado, 'A') : '0 A';
-        };
-
-        const alternar = () => atualizarCircuito(circuito.dataset.on !== 'true');
-
-        chave.addEventListener('click', alternar);
-        chave.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                alternar();
-            }
+        // seção ativa no menu
+        let ativa = null;
+        secoes.forEach((s) => { if (s.getBoundingClientRect().top < vh * 0.4) ativa = s; });
+        linksMenu.forEach((a) => {
+            const on = ativa && a.getAttribute('href') === `#${ativa.id}`;
+            a.classList.toggle('ativo', !!on);
+            if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
         });
 
-        atualizarCircuito(true);
-    }
-
-    // 5. Calculadora da Lei de Ohm
-    const ohmForm = document.getElementById('ohm-form');
-    const ohmResult = document.getElementById('ohm-result');
-
-    if (ohmForm && ohmResult) {
-        const campos = {
-            v: document.getElementById('ohm-v'),
-            i: document.getElementById('ohm-i'),
-            r: document.getElementById('ohm-r')
-        };
-
-        const mostrar = (html, erro = false) => {
-            ohmResult.innerHTML = html;
-            ohmResult.classList.toggle('is-error', erro);
-        };
-
-        const limparDestaques = () => {
-            Object.values(campos).forEach(c => c.parentElement.classList.remove('is-computed'));
-        };
-
-        let ultimoCalculado = null;
-
-        // Se o aluno digitar no campo calculado, ele passa a ser um valor informado
-        Object.entries(campos).forEach(([chave, campo]) => {
-            campo.addEventListener('input', () => {
-                if (chave === ultimoCalculado) {
-                    ultimoCalculado = null;
-                    campo.parentElement.classList.remove('is-computed');
-                }
+        if (!reduzir.matches) {
+            // cada seção "se abre" e termina quando o topo chega a 65% da tela
+            cenas.forEach((cena) => {
+                const alvo = cena.dataset.cena === 'palco' ? cena.firstElementChild : cena.firstElementChild;
+                const topoCena = cena.getBoundingClientRect().top;
+                const p = limitar((vh - topoCena) / (vh * 0.35));
+                const palco = cena.dataset.cena === 'palco';
+                const lado = palco ? 5 * (1 - p) : 2 * (1 - p);
+                const raio = palco ? 32 + 24 * (1 - p) : 40 * (1 - p);
+                alvo.style.clipPath = p >= 1 ? '' : `inset(${(palco ? 4 : 3) * (1 - p)}% ${lado}% 0% ${lado}% round ${raio}px)`;
+                alvo.style.transform = p >= 1 ? '' : `translateY(${44 * (1 - p)}px)`;
+                alvo.style.opacity = p >= 1 ? '' : String(0.65 + 0.35 * limitar(p / 0.5));
             });
-        });
-
-        ohmForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            limparDestaques();
-
-            // O campo calculado na vez anterior é recalculado (não conta como preenchido)
-            const ler = (chave) => (chave === ultimoCalculado ? null : lerValor(campos[chave].value));
-            const v = ler('v');
-            const i = ler('i');
-            const r = ler('r');
-            const valores = { v, i, r };
-
-            if (Object.values(valores).some(x => Number.isNaN(x))) {
-                mostrar('Valor inválido. Use números como 9, 0,02, 20m ou 4,7k.', true);
-                return;
-            }
-
-            const preenchidos = Object.values(valores).filter(x => x !== null).length;
-            if (preenchidos !== 2) {
-                mostrar('Preencha exatamente dois campos e deixe vazio o que deseja calcular.', true);
-                return;
-            }
-
-            let V = v, I = i, R = r, calculado;
-            if (V === null) { V = R * I; calculado = 'v'; }
-            else if (I === null) {
-                if (R === 0) { mostrar('A resistência não pode ser zero para calcular a corrente.', true); return; }
-                I = V / R; calculado = 'i';
-            } else {
-                if (I === 0) { mostrar('A corrente não pode ser zero para calcular a resistência.', true); return; }
-                R = V / I; calculado = 'r';
-            }
-
-            const rotulos = { v: ['Tensão', V, 'V'], i: ['Corrente', I, 'A'], r: ['Resistência', R, 'Ω'] };
-            const [nome, valor, unidade] = rotulos[calculado];
-
-            campos[calculado].value = String(Number(valor.toPrecision(6))).replace('.', ',');
-            campos[calculado].parentElement.classList.add('is-computed');
-            ultimoCalculado = calculado;
-
-            mostrar(
-                `<span class="result-muted">${nome} =</span>` +
-                `<span class="result-value">${formatar(valor, unidade)}</span>` +
-                `<span class="result-muted">· Potência P = ${formatar(V * I, 'W')}</span>`
-            );
-        });
-
-        ohmForm.addEventListener('reset', () => {
-            limparDestaques();
-            ultimoCalculado = null;
-            mostrar('<span class="result-muted">O resultado aparece aqui.</span>');
-        });
-    }
-
-    // 6. Código de cores de resistores (4 faixas)
-    const CORES = [
-        { nome: 'Preto',    hex: '#111827', digito: 0, mult: 1 },
-        { nome: 'Marrom',   hex: '#92400e', digito: 1, mult: 10,   tol: 1 },
-        { nome: 'Vermelho', hex: '#dc2626', digito: 2, mult: 1e2,  tol: 2 },
-        { nome: 'Laranja',  hex: '#f97316', digito: 3, mult: 1e3 },
-        { nome: 'Amarelo',  hex: '#facc15', digito: 4, mult: 1e4 },
-        { nome: 'Verde',    hex: '#16a34a', digito: 5, mult: 1e5,  tol: 0.5 },
-        { nome: 'Azul',     hex: '#2563eb', digito: 6, mult: 1e6,  tol: 0.25 },
-        { nome: 'Violeta',  hex: '#7c3aed', digito: 7, mult: 1e7,  tol: 0.1 },
-        { nome: 'Cinza',    hex: '#6b7280', digito: 8, mult: 1e8,  tol: 0.05 },
-        { nome: 'Branco',   hex: '#f8fafc', digito: 9, mult: 1e9 },
-        { nome: 'Dourado',  hex: '#d4a017',             mult: 0.1,  tol: 5 },
-        { nome: 'Prateado', hex: '#c0c0c0',             mult: 0.01, tol: 10 }
-    ];
-
-    const selects = [1, 2, 3, 4].map(n => document.getElementById(`sel-${n}`));
-    const faixas = [1, 2, 3, 4].map(n => document.getElementById(`band-${n}`));
-    const colorResult = document.getElementById('color-result');
-
-    if (selects.every(Boolean) && faixas.every(Boolean) && colorResult) {
-        const opcoes = [
-            CORES.filter(c => c.digito !== undefined),           // 1ª faixa
-            CORES.filter(c => c.digito !== undefined),           // 2ª faixa
-            CORES.filter(c => c.mult !== undefined),             // multiplicador
-            CORES.filter(c => c.tol !== undefined)               // tolerância
-        ];
-        const padrao = ['Laranja', 'Laranja', 'Marrom', 'Dourado']; // 330 Ω ± 5%
-
-        selects.forEach((sel, idx) => {
-            opcoes[idx].forEach(cor => {
-                const opt = document.createElement('option');
-                opt.value = cor.nome;
-                let detalhe = '';
-                if (idx < 2) detalhe = ` (${cor.digito})`;
-                else if (idx === 2) {
-                    const rotulo = cor.mult >= 1
-                        ? formatar(cor.mult, '').replace(' ', '')
-                        : String(cor.mult).replace('.', ',');
-                    detalhe = ` (×${rotulo})`;
-                }
-                else detalhe = ` (±${String(cor.tol).replace('.', ',')}%)`;
-                opt.textContent = cor.nome + detalhe;
-                sel.appendChild(opt);
-            });
-            sel.value = padrao[idx];
-            sel.addEventListener('change', atualizarResistor);
-        });
-
-        function atualizarResistor() {
-            const [c1, c2, c3, c4] = selects.map(s => CORES.find(c => c.nome === s.value));
-            faixas.forEach((f, idx) => f.setAttribute('fill', [c1, c2, c3, c4][idx].hex));
-
-            const valor = (c1.digito * 10 + c2.digito) * c3.mult;
-            const tol = String(c4.tol).replace('.', ',');
-            colorResult.innerHTML =
-                `<span class="result-value">${formatar(Number(valor.toPrecision(3)), 'Ω')}</span>` +
-                `<span class="result-muted">± ${tol}% · ${c1.nome}, ${c2.nome}, ${c3.nome}, ${c4.nome}</span>`;
         }
 
-        atualizarResistor();
+        // corrente percorrendo a trilha conforme a leitura
+        if (trilha) {
+            const r = trilha.getBoundingClientRect();
+            const carga = limitar((vh * 0.6 - r.top) / r.height);
+            corrente.style.setProperty('--carga', carga.toFixed(3));
+            etapas.forEach((et) => {
+                const meio = et.getBoundingClientRect().top + 14;
+                et.classList.toggle('energizada', meio < vh * 0.6);
+            });
+        }
     }
-});
+    const pedirQuadro = () => { if (!agendado) { agendado = true; requestAnimationFrame(aoRolar); } };
+    addEventListener('scroll', pedirQuadro, { passive: true });
+    addEventListener('resize', pedirQuadro);
+    aoRolar();
+
+    /* ------------------------------------------------------
+       4. Revelações: títulos palavra a palavra, etiquetas, cascatas
+       ------------------------------------------------------ */
+    $$('[data-palavras]').forEach((el) => {
+        // preserva <em> e entidades: divide nós de texto e elementos inline
+        const pedacos = [];
+        el.childNodes.forEach((no) => {
+            if (no.nodeType === 3) no.textContent.split(/\s+/).filter(Boolean).forEach((t) => pedacos.push(document.createTextNode(t)));
+            else pedacos.push(no.cloneNode(true));
+        });
+        el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+        el.textContent = '';
+        pedacos.forEach((p, i) => {
+            const caixa = document.createElement('span');
+            caixa.className = 'palavra';
+            caixa.setAttribute('aria-hidden', 'true');
+            const dentro = document.createElement('span');
+            dentro.style.setProperty('--i', i);
+            dentro.appendChild(p);
+            caixa.appendChild(dentro);
+            el.appendChild(caixa);
+            if (i < pedacos.length - 1) el.appendChild(document.createTextNode(' '));
+        });
+    });
+    $('.abertura-titulo')?.style.setProperty('--base', '120ms');
+
+    $$('.diario, .chips-atividades, .bom tbody, .instrumentos, .trilha').forEach((lista) => {
+        lista.classList.add('cascata');
+        Array.from(lista.children).forEach((filho, i) => filho.style.setProperty('--i', i));
+    });
+
+    const revelaveis = $$('[data-palavras], .etiqueta, .cascata');
+    if ('IntersectionObserver' in window && !reduzir.matches) {
+        const io = new IntersectionObserver((entradas) => {
+            entradas.forEach((en) => {
+                if (en.isIntersecting) { en.target.classList.add('visivel'); io.unobserve(en.target); }
+            });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+        revelaveis.forEach((el) => io.observe(el));
+    } else {
+        revelaveis.forEach((el) => el.classList.add('visivel'));
+    }
+
+    /* ------------------------------------------------------
+       5. Filtro de atividades (cursor deslizante)
+       ------------------------------------------------------ */
+    const seletor = $('.seletor');
+    const cursor = $('.seletor-cursor');
+    const opcoes = $$('.seletor-op');
+    const chips = $$('.chip-ci');
+    const vazio = $('#atividades-vazio');
+
+    const moverCursor = (botao) => {
+        cursor.style.width = `${botao.offsetWidth}px`;
+        cursor.style.transform = `translateX(${botao.offsetLeft}px)`;
+    };
+
+    opcoes.forEach((botao, idx) => {
+        botao.addEventListener('click', () => {
+            opcoes.forEach((b) => b.setAttribute('aria-pressed', String(b === botao)));
+            moverCursor(botao);
+            const filtro = botao.dataset.filtro;
+            let visiveis = 0;
+            chips.forEach((c) => {
+                const mostra = filtro === 'todas' || c.dataset.categoria === filtro;
+                c.classList.toggle('escondido', !mostra);
+                if (mostra) visiveis++;
+            });
+            vazio.hidden = visiveis > 0;
+        });
+        // setas do teclado entre as opções
+        botao.addEventListener('keydown', (e) => {
+            if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+            e.preventDefault();
+            const prox = opcoes[(idx + (e.key === 'ArrowRight' ? 1 : -1) + opcoes.length) % opcoes.length];
+            prox.focus(); prox.click();
+        });
+    });
+    const posicionarCursor = () => moverCursor(opcoes.find((b) => b.getAttribute('aria-pressed') === 'true'));
+    posicionarCursor();
+    addEventListener('resize', posicionarCursor);
+    document.fonts?.ready.then(posicionarCursor);
+    if (seletor) seletor.classList.add('pronto');
+
+    /* ------------------------------------------------------
+       6. Simulador: fonte + resistor + LED
+       ------------------------------------------------------ */
+    const sim = $('.simulador');
+    if (sim && E) {
+        const RESISTORES = [100, 220, 330, 470, 1000];
+        const entradaV = $('#sim-v');
+        const grupoR = $('#sim-r');
+        let resistencia = 330;
+
+        RESISTORES.forEach((r) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.setAttribute('role', 'radio');
+            b.dataset.valor = r;
+            b.textContent = E.formatar(r, 'Ω').replace(' ', ' ');
+            grupoR.appendChild(b);
+        });
+        const botoesR = $$('button', grupoR);
+
+        const MENSAGENS = {
+            apagado: 'A tensão não vence a queda de ~2 V do LED: ele fica apagado.',
+            fraco: 'O LED acende, mas fraco. Diminua o resistor ou aumente a tensão.',
+            ideal: 'Corrente dentro do recomendado (até ~20 mA). Brilho bom e seguro.',
+            excesso: 'Um pouco acima dos 20 mA recomendados para o LED.',
+            queimado: 'Corrente acima de 30 mA: na bancada, este LED queimaria.'
+        };
+
+        function atualizarSim() {
+            const v = parseFloat(entradaV.value);
+            const c = E.circuitoLed(v, resistencia);
+            sim.dataset.estado = c.estado;
+
+            $('#sim-v-saida').textContent = `${String(v).replace('.', ',')} V`;
+            entradaV.style.setProperty('--p', `${(v / 12) * 100}%`);
+            entradaV.setAttribute('aria-valuetext', `${String(v).replace('.', ',')} volts`);
+            $('#sim-rotulo-v').textContent = `${String(v).replace('.', ',')} V`;
+            $('#sim-rotulo-r').textContent = E.formatar(resistencia, 'Ω');
+
+            const cores = E.coresPorValor(resistencia);
+            cores.forEach((nome, i) => $(`#sim-faixa-${i + 1}`).setAttribute('fill', E.corPorNome(nome).hex));
+
+            botoesR.forEach((b) => b.setAttribute('aria-checked', String(Number(b.dataset.valor) === resistencia)));
+            botoesR.forEach((b) => b.tabIndex = Number(b.dataset.valor) === resistencia ? 0 : -1);
+
+            const brilho = c.estado === 'queimado' ? 0 : c.brilho;
+            $('#sim-brilho').style.opacity = (0.15 + 0.85 * brilho) * (c.corrente > 0 ? 1 : 0);
+            $('#sim-brilho').style.transform = `scale(${0.6 + 0.5 * brilho})`;
+            $('.led-luz', sim).style.opacity = brilho > 0 ? 0.4 + 0.6 * brilho : 0;
+            $('.led-corpo', sim).style.fill = c.corrente > 0 && c.estado !== 'queimado'
+                ? `color-mix(in srgb, #ff3b2f ${40 + 60 * brilho}%, #4a1c18)` : '';
+
+            const eletrons = $('#sim-eletrons');
+            eletrons.style.opacity = c.corrente > 0 && c.estado !== 'queimado' ? 1 : 0;
+            // mais corrente = elétrons mais rápidos
+            eletrons.style.setProperty('--vel', `${Math.max(0.35, Math.min(3, 0.025 / Math.max(c.corrente, 0.001)))}s`);
+
+            $('#sim-i').textContent = E.formatar(c.estado === 'queimado' ? c.corrente : c.corrente, 'A');
+            $('#sim-vr').textContent = E.formatar(c.tensaoResistor, 'V');
+            $('#sim-pr').textContent = E.formatar(c.potenciaResistor, 'W');
+            let msg = MENSAGENS[c.estado];
+            if ((c.estado === 'excesso' || c.estado === 'queimado' || c.estado === 'fraco') && c.resistorIdeal) {
+                msg += ` Para 20 mA, use cerca de ${E.formatar(c.resistorIdeal, 'Ω')}.`;
+            }
+            $('#sim-msg').textContent = msg;
+        }
+
+        entradaV.addEventListener('input', atualizarSim);
+        botoesR.forEach((b, idx) => {
+            b.addEventListener('click', () => { resistencia = Number(b.dataset.valor); atualizarSim(); });
+            b.addEventListener('keydown', (e) => {
+                const passo = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+                if (!passo) return;
+                e.preventDefault();
+                const prox = botoesR[(idx + passo + botoesR.length) % botoesR.length];
+                prox.focus(); prox.click();
+            });
+        });
+        atualizarSim();
+    }
+
+    /* ------------------------------------------------------
+       7. Lei de Ohm (multímetro)
+       ------------------------------------------------------ */
+    const form = $('#ohm-form');
+    if (form && E) {
+        const campos = { v: $('#ohm-v'), i: $('#ohm-i'), r: $('#ohm-r') };
+        const lcd = $('#ohm-lcd');
+        let ultimoCalculado = null;
+
+        const mostrar = (rotulo, valor, extra, erro = false) => {
+            $('#ohm-lcd-rotulo').textContent = rotulo;
+            $('#ohm-lcd-valor').textContent = valor;
+            $('#ohm-lcd-extra').textContent = extra;
+            lcd.classList.toggle('erro', erro);
+        };
+        const limparDestaque = () => Object.values(campos).forEach((c) => c.parentElement.classList.remove('calculado'));
+
+        Object.entries(campos).forEach(([chave, campo]) => {
+            campo.addEventListener('input', () => {
+                if (chave === ultimoCalculado) { ultimoCalculado = null; campo.parentElement.classList.remove('calculado'); }
+            });
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            limparDestaque();
+            // o campo calculado antes é recalculado (não conta como preenchido)
+            const ler = (k) => (k === ultimoCalculado ? null : E.lerValor(campos[k].value));
+            try {
+                const res = E.leiDeOhm({ v: ler('v'), i: ler('i'), r: ler('r') });
+                const info = { v: ['tensão', res.v, 'V'], i: ['corrente', res.i, 'A'], r: ['resistência', res.r, 'Ω'] }[res.calculado];
+                campos[res.calculado].value = String(Number(info[1].toPrecision(6))).replace('.', ',');
+                campos[res.calculado].parentElement.classList.add('calculado');
+                ultimoCalculado = res.calculado;
+                mostrar(info[0], E.formatar(info[1], info[2]), `P = ${E.formatar(res.p, 'W')}`);
+            } catch (erro) {
+                mostrar('erro', erro.message, '', true);
+            }
+        });
+
+        form.addEventListener('reset', () => {
+            limparDestaque();
+            ultimoCalculado = null;
+            mostrar('pronto', '— — —', 'V = R × I');
+        });
+    }
+
+    /* ------------------------------------------------------
+       8. Código de cores (4 faixas)
+       ------------------------------------------------------ */
+    const selects = [1, 2, 3, 4].map((n) => $(`#sel-${n}`));
+    if (selects.every(Boolean) && E) {
+        const listas = [
+            E.CORES.filter((c) => c.digito !== undefined),
+            E.CORES.filter((c) => c.digito !== undefined),
+            E.CORES,
+            E.CORES.filter((c) => c.tol !== undefined)
+        ];
+        const padrao = ['Laranja', 'Laranja', 'Marrom', 'Dourado'];
+        const rotuloMult = (m) => (m >= 1 ? E.formatar(m, '').replace(' ', '') : String(m).replace('.', ','));
+
+        selects.forEach((sel, idx) => {
+            listas[idx].forEach((cor) => {
+                const op = document.createElement('option');
+                op.value = cor.nome;
+                const detalhe = idx < 2 ? cor.digito : idx === 2 ? `×${rotuloMult(cor.mult)}` : `±${String(cor.tol).replace('.', ',')}%`;
+                op.textContent = `${cor.nome} (${detalhe})`;
+                sel.appendChild(op);
+            });
+            sel.value = padrao[idx];
+            sel.addEventListener('change', atualizarCores);
+        });
+
+        function atualizarCores() {
+            const nomes = selects.map((s) => s.value);
+            nomes.forEach((n, i) => $(`#faixa-${i + 1}`).setAttribute('fill', E.corPorNome(n).hex));
+            const valor = E.valorPorCores(nomes[0], nomes[1], nomes[2]);
+            $('#cor-valor').textContent = E.formatar(valor, 'Ω');
+            $('#cor-extra').textContent = `± ${String(E.corPorNome(nomes[3]).tol).replace('.', ',')}%`;
+        }
+        atualizarCores();
+    }
+})();
